@@ -1,0 +1,14 @@
+// Verdin iMX8MP overlay to enable CAN on Ipê Board.
+// It's necessary to apply this overlay above the imx8mp-verdin-wifi-dev.dtb or imx8mp-verdin-nonwifi-dev.dtb because of the "nau8822_1a" device.
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "toradex,verdin-imx8mp";
+};
+
+&fec {
+	phy-supply = <&reg_3p3v>;
+	status = "okay";
+};

@@ -1,0 +1,34 @@
+// Verdin iMX8MP overlay to enable CAN on Ipê Board.
+// It's necessary to apply this overlay above the imx8mp-verdin-wifi-dev.dtb or imx8mp-verdin-nonwifi-dev.dtb because of the "nau8822_1a" device.
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "toradex,verdin-imx8mp";
+};
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/../../arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>
+
+&nau8822_1a {
+        status = "disabled";
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_gpio1>, <&pinctrl_gpio2>,
+		    <&pinctrl_gpio3>, <&pinctrl_gpio4>,
+		    <&pinctrl_gpio7>, <&pinctrl_gpio8>,
+		    <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>, <&pinctrl_gpio_hog4>,
+		    <&pinctrl_can1_rs>, <&pinctrl_can2_rs>, <&pinctrl_hdmi_hog>;
+
+	pinctrl_can1_rs: can1rswitty {
+		fsl,pins = 
+			<MX8MP_IOMUXC_SAI1_RXD0__GPIO4_IO02		0x184>; /* SODIMM 36 */
+	};
+	pinctrl_can2_rs: can2rswitty {
+		fsl,pins =
+			<MX8MP_IOMUXC_SAI3_TXC__GPIO5_IO00 		0x184>; /* SODIMM 42 */
+	};
+};
