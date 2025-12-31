@@ -42,7 +42,7 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 ### Verdin iMX8M Mini
 
 **verdin-imx8mm_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts**
-- MIPI-DSI Display 7"/10.1" (1024x600) via SN65DSI83
+- MIPI-DSI Display 7"/10.1" (1024x600)
 - PWM Backlight
 - Goodix GT911 Touch
 
