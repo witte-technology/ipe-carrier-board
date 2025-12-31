@@ -1,0 +1,150 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin iMX8MP overlay - Native LVDS Display
+ * Display Model: AT-T101QIH-45CP 10.1" 1280x800 LVDS
+ *
+ * Touchscreen capacitive: Goodix GT928
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pwm/pwm.h>
+#include <dt-bindings/../../arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>
+
+/ {
+	compatible = "toradex,verdin-imx8mp";
+};
+
+/* Panel LVDS definition */
+&{/} {
+	panel_lvds_native: panel-lvds-native {
+		compatible = "panel-lvds";
+		backlight = <&backlight_lvds_native>;
+		data-mapping = "vesa-24";
+		height-mm = <136>;
+		width-mm = <217>;
+		status = "okay";
+
+		panel-timing {
+			clock-frequency = <71100000>;
+			de-active = <1>;
+			hactive = <1280>;
+			hback-porch = <60>;
+			hfront-porch = <60>;
+			hsync-active = <0>;
+			hsync-len = <40>;
+			pixelclk-active = <1>;
+			vactive = <800>;
+			vback-porch = <7>;
+			vfront-porch = <7>;
+			vsync-active = <0>;
+			vsync-len = <9>;
+		};
+
+		port {
+			panel_lvds_in: endpoint {
+				remote-endpoint = <&ldb_lvds_ch0_out>;
+			};
+		};
+	};
+
+	backlight_lvds_native: backlight-lvds-native {
+		compatible = "pwm-backlight";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_i2s_2_d_out_dsi_1_bkl_en>;
+		brightness-levels = <0 4 8 14 22 32 45 60 78 100 125 153 185 220 255>;
+		default-brightness-level = <10>;
+		enable-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
+		pwms = <&pwm1 0 6666667 PWM_POLARITY_INVERTED>;
+		status = "okay";
+	};
+};
+
+&gpu_2d {
+	status = "okay";
+};
+
+&gpu_3d {
+	status = "okay";
+};
+
+/* Verdin I2C_2_DSI */
+&i2c2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* Goodix GT928 touchscreen at 0x14 address */
+	touch@14 {
+		compatible = "goodix,gt928";
+		reg = <0x14>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rst_int_gpios>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+		reset-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>;
+		status = "disabled";
+	};
+
+	/* Goodix GT928 touchscreen at 0x5D address */
+	touch@5d {
+		compatible = "goodix,gt928";
+		reg = <0x5d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rst_int_gpios>;
+		interrupt-parent = <&gpio5>;
+		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+		reset-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_rst_int_gpios: gt928gpiosgrp {
+		fsl,pins =
+			<MX8MP_IOMUXC_SAI3_TXD__GPIO5_IO01 0x184>,
+			<MX8MP_IOMUXC_SAI3_TXFS__GPIO4_IO31 0x184>;
+	};
+
+	pinctrl_i2s_2_d_out_dsi_1_bkl_en: i2s2doutdsi1bklengrp {
+		fsl,pins =
+			<MX8MP_IOMUXC_SAI3_RXD__GPIO4_IO30 0x184>;
+	};
+};
+
+&lcdif2 {
+	status = "okay";
+};
+
+&ldb {
+	status = "okay";
+
+	lvds-channel@0 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+
+		port@1 {
+			reg = <1>;
+
+			ldb_lvds_ch0_out: endpoint {
+				remote-endpoint = <&panel_lvds_in>;
+			};
+		};
+	};
+};
+
+&ldb_phy {
+	status = "okay";
+};
+
+&pwm1 {
+	status = "okay";
+};
