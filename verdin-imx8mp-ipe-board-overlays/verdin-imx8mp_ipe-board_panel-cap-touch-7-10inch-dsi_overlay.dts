@@ -1,4 +1,17 @@
-// Verdin iMX8MP overlay to enable DSI displays connected to Ipê Board.
+// SPDX-License-Identifier: MIT
+/*
+ * Verdin iMX8MP overlay - MIPI-DSI Displays from HTMG
+ * Display Models GBExxxWSH02CE: 
+ * 	- TDO GBE070WSH02CE 7" 1024x600 MIPI-DSI
+ *	- TDO GBE101WSH02CE 10.1" 1024x600 MIPI-DSI
+ *
+ * Touchscreen capacitive: Goodix GT911
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 5.x (TorizonOS 6.x)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
 
 /dts-v1/;
 /plugin/;

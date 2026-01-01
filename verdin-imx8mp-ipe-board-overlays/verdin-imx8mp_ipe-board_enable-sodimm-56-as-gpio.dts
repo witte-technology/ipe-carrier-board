@@ -1,4 +1,5 @@
 // Verdin iMX8MP overlay to enable SODIMM 56 as GPIO on Ipê Board.
+// SPDX-License-Identifier: MIT
 
 /dts-v1/;
 /plugin/;
