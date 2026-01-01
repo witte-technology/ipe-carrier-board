@@ -20,12 +20,6 @@ input:
   easy-installer:
     # >> Choose one of the options (REQUIRED):
     # >> (1) Image as local folder or tarball.
-    # AM62
-    #local: 
-    # AM62P 
-    #local: 
-    # IMX8MP Mini
-    #local: 
     # IMX8MP Plus
     local: torizon-core-docker-verdin-imx8mp-Tezi_6.8.4+build.40.tar
     # >> (2) Remote file (optionally with a filename and or a sha256 checksum):
@@ -60,17 +54,9 @@ customization:
     # >> Directories where to look for include files.
     include-dirs:
       - linux/include/
-      # Verdin Texas Instruments AM6x processors
-      #- linux/arch/arm64/boot/dts/ti/
       # Verdin Frescale IMX processors
       - linux/arch/arm64/boot/dts/freescale/
     # >> Custom device tree source:
-    # AM62
-    #custom: linux/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
-    # AM62P
-    #custom: linux/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-dev.dts
-    # IMX8MM Mini
-    #custom: linux/arch/arm64/boot/dts/freescale/imx8mm-verdin-wifi-dev.dts
     # IMX8MP Plus
     custom: linux/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi-dev.dts
     # >> Device-tree overlays configuration:
@@ -90,15 +76,12 @@ customization:
         #-- verdin-imx8mp_nau8822-btl_overlay.dtbo
       # >> Overlays to add to output image.
       add:
-        # AM62
-        # AM62P
-        # IMX8MM Mini
         # IMX8MP Plus
         - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_enable-2ndfec.dts
         - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_enable-can.dts
         - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts
-        - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts
-        #- device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts       
+        #- device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts
+        - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts       
   # kernel:
     # >> Custom kernel arguments.
     # arguments:

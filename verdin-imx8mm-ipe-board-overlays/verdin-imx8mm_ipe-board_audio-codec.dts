@@ -1,0 +1,75 @@
+// SPDX-License-Identifier: MIT
+/*
+ * Verdin iMX8MM overlay - TAS2110 Audio Codec
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 5.15 (TorizonOS 6.x)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/clock/imx8mm-clock.h>
+#include <dt-bindings/../../arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>
+
+/ {
+	compatible = "toradex,verdin-imx8mm";
+};
+
+&{/} {
+	sound_ext {
+		compatible = "simple-audio-card";
+		simple-audio-card,bitclock-master = <&codec_cpu>;
+		simple-audio-card,frame-master = <&codec_cpu>;
+		simple-audio-card,name = "tas2110";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,widgets =
+			"Speaker", "Speaker";
+		simple-audio-card,routing =
+			"DAC", "ASI1 Sel",
+			"OUT", "DAC",
+			"Speaker", "OUT";
+		codec_dai: simple-audio-card,codec {
+			sound-dai = <&tas2110>;
+		};
+		codec_cpu: simple-audio-card,cpu {
+			sound-dai = <&sai1>;
+		};
+	};
+};
+
+&nau8822_1a {
+	status = "disabled";
+};
+
+&sai1 {
+	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL2_OUT>;
+	assigned-clock-rates = <11289600>;
+	status = "okay";
+};
+
+&i2c4 {
+	status = "okay";
+
+	/* Audio Codec */
+	tas2110: audio-codec@4c {
+		compatible = "ti,tas2110";
+		reg = <0x4c>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_sai1>;
+		#sound-dai-cells = <0>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl_sai1: sai1grp {
+		fsl,pins =
+			<MX8MM_IOMUXC_SAI5_MCLK_SAI1_TX_BCLK		0x1d6>,	/* SODIMM 30 */
+			<MX8MM_IOMUXC_SAI5_RXD1_SAI1_TX_SYNC	0x1d6>,	/* SODIMM 32 */
+			<MX8MM_IOMUXC_SAI5_RXFS_SAI1_TX_DATA0	0x96>;	/* SODIMM 34 */
+	};
+};

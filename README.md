@@ -1,4 +1,4 @@
-# IPE Carrier Board - Device Tree Overlays
+# IPECarrier Board - Device Tree Overlays
 
 Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatible with Toradex Verdin modules.
 
@@ -11,7 +11,7 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 ## Supported Modules
 
 - ✅ Verdin iMX8M Plus
-- 🔜 Verdin iMX8M Mini *(coming soon)*
+- ✅ Verdin iMX8M Mini
 - 🔜 Verdin AM62 *(coming soon)*
 - 🔜 Verdin AM62P *(coming soon)*
 
@@ -21,26 +21,53 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 
 | Overlay | Description |
 |---------|-------------|
-| `verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts` | MIPI-DSI Display 7"/10.1" (1024x600) with SN65DSI83 bridge, PWM Backlight, Goodix GT911 Touch |
+| `verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts` | MIPI-DSI Display 7"/10.1" (1024x600), PWM Backlight, Goodix GT911 Touch |
 | `verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts` | Native LVDS Display 10.1" (1280x800), PWM Backlight, Goodix GT928 Touch |
 | `verdin-imx8mp_ipe-board_audio-codec.dts` | TAS2110 Audio Codec via I2S/SAI1 |
 | `verdin-imx8mp_ipe-board_enable-2ndfec.dts` | Second Ethernet interface (FEC) |
 | `verdin-imx8mp_ipe-board_enable-can.dts` | CAN interfaces with RS pin control |
 | `verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts` | SODIMM 56 configured as GPIO (disables QSPI) |
 
+### Verdin iMX8M Mini
+
+| Overlay | Description |
+|---------|-------------|
+| `verdin-imx8mm_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts` | MIPI-DSI Display 7"/10.1" (1024x600), PWM Backlight, Goodix GT911 Touch |
+| `verdin-imx8mm_ipe-board_audio-codec.dts` | TAS2110 Audio Codec via I2S/SAI1 |
+| `verdin-imx8mm_ipe-board_enable-can.dts` | CAN interfaces with RS pin control ¹ |
+| `verdin-imx8mm_ipe-board_enable-sodimm-56-as-gpio.dts` | SODIMM 56 configured as GPIO (disables QSPI) |
+
+> ¹ **Note:** The Verdin iMX8M Mini Quad 2GB Wi-Fi / Bluetooth IT (No CAN) **PN: 0068** does NOT have CAN support.
+
+### Feature Comparison
+
+| Feature | iMX8M Plus | iMX8M Mini |
+|---------|:----------:|:----------:|
+| MIPI-DSI Display | ✅ | ✅ |
+| Native LVDS Display | ✅ | ❌ |
+| TAS2110 Audio Codec | ✅ | ✅ |
+| Second Ethernet (FEC) | ✅ | ❌ |
+| CAN Interfaces | ✅ | ✅ ¹ |
+| SODIMM 56 as GPIO | ✅ | ✅ |
+
 ## Repository Structure
 
 ```
 device-trees/
 └── ipe-carrier-board/
-    └── verdin-imx8mp-ipe-board-overlays/
-        ├── display-tdo-ts070wsh02ce_overlay.dtsi
-        ├── verdin-imx8mp_ipe-board_audio-codec.dts
-        ├── verdin-imx8mp_ipe-board_enable-2ndfec.dts
-        ├── verdin-imx8mp_ipe-board_enable-can.dts
-        ├── verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts
-        ├── verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts
-        └── verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts
+    ├── verdin-imx8mp-ipe-board-overlays/
+    │   ├── display-tdo-ts070wsh02ce_overlay.dtsi
+    │   ├── verdin-imx8mp_ipe-board_audio-codec.dts
+    │   ├── verdin-imx8mp_ipe-board_enable-2ndfec.dts
+    │   ├── verdin-imx8mp_ipe-board_enable-can.dts
+    │   ├── verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts
+    │   ├── verdin-imx8mp_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts
+    │   └── verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts
+    └── verdin-imx8mm-ipe-board-overlays/
+        ├── verdin-imx8mm_ipe-board_audio-codec.dts
+        ├── verdin-imx8mm_ipe-board_enable-can.dts
+        ├── verdin-imx8mm_ipe-board_enable-sodimm-56-as-gpio.dts
+        └── verdin-imx8mm_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts
 ```
 
 ## Quick Setup Guide
@@ -93,6 +120,8 @@ Add a 1024x600 PNG image named `custom-splash-screen.png`. If you don't want a c
 
 ### 7. Final structure
 
+**For Verdin iMX8M Plus:**
+
 ```
 ~/tcbdir/witte/
 ├── custom-splash-screen.png                              (optional)
@@ -100,6 +129,17 @@ Add a 1024x600 PNG image named `custom-splash-screen.png`. If you don't want a c
 ├── linux/                                                (Toradex kernel)
 ├── tcbuild.yaml
 └── torizon-core-docker-verdin-imx8mp-Tezi_6.8.4+build.40.tar
+```
+
+**For Verdin iMX8M Mini:**
+
+```
+~/tcbdir/witte/
+├── custom-splash-screen.png                              (optional)
+├── device-trees/                                         (this repository)
+├── linux/                                                (Toradex kernel)
+├── tcbuild.yaml
+└── torizon-core-docker-verdin-imx8mm-Tezi_6.8.4+build.40.tar
 ```
 
 ### 8. Run build
