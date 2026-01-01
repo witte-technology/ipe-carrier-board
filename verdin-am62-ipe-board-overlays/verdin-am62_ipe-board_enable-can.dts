@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Enable CAN interfaces
+ * 
+ * CAN Interfaces:
+ *   - main_mcan0 = Verdin CAN_1 (SODIMM 20, 22)
+ *   - mcu_mcan0 = Verdin CAN_2 (SODIMM 24, 26)
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.1 (TorizonOS 6.x)
+ * 
+ * Note: The Ipê Carrier Board has CAN transceivers with RS (slope control)
+ * pins directly controlled by the board (no GPIO control needed from SoM).
+ * 
+ * AM62 CAN Architecture:
+ *   - main_mcan0: Main domain CAN FD controller
+ *   - mcu_mcan0: MCU domain CAN FD controller
+ *   - Both support CAN FD (Flexible Data-rate)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Verdin CAN_1 - Main domain MCAN0 */
+&main_mcan0 {
+	status = "okay";
+};
+
+/* Verdin CAN_2 - MCU domain MCAN0 */
+&mcu_mcan0 {
+	status = "okay";
+};

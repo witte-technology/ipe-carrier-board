@@ -1,0 +1,81 @@
+# tcbuild.yaml sample for Witte IPE Carrier Board
+# Module: Verdin AM62
+# Carrier Board: Ipê Carrier Board
+# Kernel 6.1 (TorizonOS 6.x)
+
+input:
+  easy-installer:
+    # AM62
+    local: torizon-core-docker-verdin-am62-Tezi_6.8.4+build.40.tar
+
+customization:
+  # Splash screen (optional):
+  splash-screen: custom-splash-screen.png
+
+  device-tree:
+    # Directories where to look for include files.
+    include-dirs:
+      - linux/include/
+      # Verdin Texas Instruments AM6x processors
+      - linux/arch/arm64/boot/dts/ti/
+
+    # Custom device tree source:
+    # AM62
+    custom: linux/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
+
+    # Device-tree overlays configuration:
+    overlays:
+      # Clear all overlays from base image
+      clear: true
+
+      # Overlays to add to output image.
+      add:
+        # === Peripherals ===
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
+        # - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_audio-codec.dts
+
+        # === Display (choose ONE) ===
+        # Option 1: Native LVDS (OLDI) 10.1" 1280x800
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_lvds_display_10inch_overlay.dts
+        # Option 2: MIPI-DSI 7"/10.1" 1024x600
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts
+
+output:
+  easy-installer:
+    # Output directory of the customized image:
+    local: output_image_easy_installer
+
+# ============================================================================
+# SETUP INSTRUCTIONS
+# ============================================================================
+#
+# 1. Create directory structure:
+#    cd ~/tcbdir
+#    mkdir witte && cd witte
+#
+# 2. Clone device tree overlays repository:
+#    git clone -b torizon-6.x_kernel-6.1 https://github.com/user/repo.git device-trees
+#
+# 3. Clone Toradex Linux kernel (for AM62):
+#    git clone -b toradex_ti-linux-6.1.y git://git.toradex.com/linux-toradex.git linux
+#
+# 4. Download TorizonOS 6.x image for AM62:
+#    https://developer.toradex.com/software/toradex-embedded-software/toradex-download-links-torizon-linux-bsp-wince-and-partner-demos/#torizon-os-6
+#
+# 5. Copy this tcbuild.yaml to the witte folder
+#
+# 6. (Optional) Add custom-splash-screen.png (1024x600)
+#
+# 7. Final structure:
+#    ~/tcbdir/witte/
+#    ├── custom-splash-screen.png                    (optional)
+#    ├── device-trees/                               (this repository)
+#    ├── linux/                                      (Toradex kernel)
+#    ├── tcbuild.yaml
+#    └── torizon-core-docker-verdin-am62-Tezi_6.8.4+build.40.tar
+#
+# 8. Run build:
+#    torizoncore-builder build
+#
+# ============================================================================

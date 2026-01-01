@@ -1,0 +1,146 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Native LVDS Display (OLDI)
+ * Display Model: AT-T101QIH-45CP 10.1" 1280x800 LVDS
+ *
+ * Touchscreen capacitive: Goodix GT928
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.1 (TorizonOS 6.x)
+ * 
+ * AM62 LVDS Architecture (kernel 6.1):
+ *   - Uses OLDI (Open LVDS Display Interface)
+ *   - Single-link LVDS via OLDI0
+ *   - DSS (Display SubSystem) with tidss driver
+ *   - Direct connection via dss_ports
+ * 
+ * Pin Mapping:
+ *   - OLDI0_A0-A3: LVDS data lanes (no pinmux needed - dedicated pins)
+ *   - OLDI0_CLK0: LVDS clock
+ *   - SODIMM 15 (PWM_1): Backlight PWM
+ *   - SODIMM 17 (DSI_1_INT#): Touch interrupt
+ *   - SODIMM 42 (I2S_2_BCLK): Touch reset
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pwm/pwm.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Panel LVDS and backlight definition */
+&{/} {
+	panel_lvds: panel-lvds {
+		compatible = "panel-lvds";
+		backlight = <&backlight_lvds>;
+		data-mapping = "vesa-24";
+		height-mm = <136>;
+		width-mm = <217>;
+		status = "okay";
+
+		panel-timing {
+			clock-frequency = <68900000 71100000 73400000>;
+			de-active = <1>;
+			hactive = <1280 1280 1280>;
+			hback-porch = <23 60 71>;
+			hfront-porch = <23 60 71>;
+			hsync-active = <0>;
+			hsync-len = <15 40 47>;
+			pixelclk-active = <1>;
+			vactive = <800 800 800>;
+			vback-porch = <5 7 10>;
+			vfront-porch = <5 7 10>;
+			vsync-active = <0>;
+			vsync-len = <6 9 12>;
+		};
+
+		port {
+			panel_lvds_in: endpoint {
+				remote-endpoint = <&oldi_out0>;
+			};
+		};
+	};
+
+	backlight_lvds: backlight-lvds {
+		compatible = "pwm-backlight";
+		brightness-levels = <0 4 8 14 22 32 45 60 78 100 125 153 185 220 255>;
+		default-brightness-level = <10>;
+		/* Verdin PWM_1 (SODIMM 15) */
+		pwms = <&epwm0 0 6666667 PWM_POLARITY_INVERTED>;
+		status = "okay";
+	};
+};
+
+/* DSS - Display SubSystem */
+&dss {
+	status = "okay";
+};
+
+/*
+ * Disable DSI bridge if present - LVDS and DSI cannot work simultaneously
+ */
+&dsi_bridge {
+	status = "disabled";
+};
+
+/* DSS ports configuration - kernel 6.1 structure */
+&dss_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* VP1: LVDS Output (OLDI TX 0) */
+	port@0 {
+		reg = <0>;
+
+		oldi_out0: endpoint {
+			remote-endpoint = <&panel_lvds_in>;
+		};
+	};
+};
+
+/* Verdin PWM_1 for backlight */
+&epwm0 {
+	status = "okay";
+};
+
+/* Verdin I2C_2_DSI for touchscreen */
+&main_i2c2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clock-frequency = <400000>;
+	status = "okay";
+
+	/* Goodix GT928 touchscreen at 0x14 address */
+	touch@14 {
+		compatible = "goodix,gt928";
+		reg = <0x14>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_dsi1_int>, <&pinctrl_i2s_2_bclk_gpio>;
+		/* Verdin DSI_1_INT# (SODIMM 17) */
+		interrupt-parent = <&main_gpio1>;
+		interrupts = <49 IRQ_TYPE_EDGE_FALLING>;
+		/* Verdin I2S_2_BCLK (SODIMM 42) */
+		reset-gpios = <&main_gpio0 35 GPIO_ACTIVE_LOW>;
+		status = "disabled";
+	};
+
+	/* Goodix GT928 touchscreen at 0x5D address */
+	touch@5d {
+		compatible = "goodix,gt928";
+		reg = <0x5d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_dsi1_int>, <&pinctrl_i2s_2_bclk_gpio>;
+		/* Verdin DSI_1_INT# (SODIMM 17) */
+		interrupt-parent = <&main_gpio1>;
+		interrupts = <49 IRQ_TYPE_EDGE_FALLING>;
+		/* Verdin I2S_2_BCLK (SODIMM 42) */
+		reset-gpios = <&main_gpio0 35 GPIO_ACTIVE_LOW>;
+		status = "okay";
+	};
+};
