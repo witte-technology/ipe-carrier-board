@@ -131,7 +131,7 @@ torizoncore-builder build
 
 ## License
 
-SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+SPDX-License-Identifier: MIT
 
 ## Contact
 
