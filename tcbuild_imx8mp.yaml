@@ -20,12 +20,6 @@ input:
   easy-installer:
     # >> Choose one of the options (REQUIRED):
     # >> (1) Image as local folder or tarball.
-    # AM62
-    #local: torizon-docker-verdin-am62-Tezi_7.4.0+build.28.tar
-    # AM62P 
-    #local: torizon-docker-verdin-am62p-Tezi_7.4.0+build.28.tar
-    # IMX8MP Mini
-    #local: torizon-docker-verdin-imx8mm-Tezi_7.4.0+build.28.tar
     # IMX8MP Plus
     local: torizon-docker-verdin-imx8mp-Tezi_7.4.0+build.28.tar
     # >> (2) Remote file (optionally with a filename and or a sha256 checksum):
@@ -60,17 +54,9 @@ customization:
     # >> Directories where to look for include files.
     include-dirs:
       - linux/include/
-      # Verdin Texas Instruments AM6x processors
-      #- linux/arch/arm64/boot/dts/ti/
       # Verdin Frescale IMX processors
       - linux/arch/arm64/boot/dts/freescale/
     # >> Custom device tree source:
-    # AM62
-    #custom: linux/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
-    # AM62P
-    #custom: linux/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-dev.dts
-    # IMX8MM Mini
-    #custom: linux/arch/arm64/boot/dts/freescale/imx8mm-verdin-wifi-dev.dts
     # IMX8MP Plus
     custom: linux/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi-dev.dts
     # >> Device-tree overlays configuration:
@@ -81,19 +67,10 @@ customization:
       # >> Specific overlays not to use from base image (useful only when
       # >> clear is false and not DT has been selected).
       #remove:
-        # - apalis-imx8_hdmi_overlay.dtbo
-        # AM62
-        # AM62P        
-        # IMX8MM Mini
-        #- verdin-imx8mm_nau8822-btl_overlay.dtbo
         # IMX8MP Plus
-        #-- verdin-imx8mp_nau8822-btl_overlay.dtbo
+        - verdin-imx8mp_nau8822-btl_overlay.dtbo
       # >> Overlays to add to output image.
       add:
-        # AM62
-        # AM62P
-        # IMX8MM Mini
-        #- device-trees/ipe-carrier-board/verdin-imx8mm-ipe-board-overlays/verdin-imx8mm_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts
         # IMX8MP Plus
         - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_enable-2ndfec.dts
         - device-trees/ipe-carrier-board/verdin-imx8mp-ipe-board-overlays/verdin-imx8mp_ipe-board_enable-can.dts

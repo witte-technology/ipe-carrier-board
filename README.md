@@ -100,7 +100,7 @@ https://developer.toradex.com/software/toradex-embedded-software/toradex-downloa
 
 ### 5. Configure tcbuild.yaml
 
-Copy the sample `tcbuild.yaml` file from this repository to the `witte` folder and adjust it according to your target module.
+Copy the sample `tcbuild_imx8mm.yaml` or `tcbuild_imx8mp.yaml`  file from this repository to the `witte` folder and adjust it according to your target module. Also rename the file to `tcbuild.yaml` to be recognize as default by build command.
 
 ### 6. Splash screen (optional)
 
@@ -116,7 +116,8 @@ Add a 1024x600 PNG image named `custom-splash-screen.png`. If you don't want a c
 ├── custom-splash-screen.png                              (optional)
 ├── device-trees/                                         (this repository)
 ├── linux/                                                (Toradex kernel)
-├── tcbuild.yaml
+├── tcbuild_imx8mm.yaml
+├── tcbuild_imx8mp.yaml
 ├── torizon-docker-verdin-am62-Tezi_7.4.0+build.28.tar
 ├── torizon-docker-verdin-am62p-Tezi_7.4.0+build.28.tar
 ├── torizon-docker-verdin-imx8mm-Tezi_7.4.0+build.28.tar
