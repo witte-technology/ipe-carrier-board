@@ -2,6 +2,14 @@
 
 Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatible with Toradex Verdin modules.
 
+<p align="center">
+  <img src="assets/images/ipe_carrier_board.png" alt="Ipê Carrier Board" width="800">
+</p>
+
+<p align="center">
+  <em>IPE Carrier Board by Witte Technology</em>
+</p>
+
 ## ⚠️ Important: Select the Correct Branch
 
 This repository uses **separate branches** for each TorizonOS version. The `master` branch contains only this documentation.
