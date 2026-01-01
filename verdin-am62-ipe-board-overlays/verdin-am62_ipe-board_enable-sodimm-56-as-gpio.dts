@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Enable SODIMM 56 as GPIO
+ * 
+ * Pin: SODIMM 56 = OSPI0_D0 / GPIO0_3
+ * Default Function: QSPI_1_IO0 (OSPI data line)
+ * New Function: GPIO0_3 (General Purpose I/O)
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * Note: This overlay disables the QSPI (OSPI) interface and configures
+ * SODIMM 56 as a GPIO. Use this only if QSPI flash is not needed.
+ * 
+ * AM62 GPIO Mapping:
+ *   - SODIMM 52 = GPIO0_0 (OSPI0_CLK)
+ *   - SODIMM 54 = GPIO0_11 (OSPI0_CSn0)
+ *   - SODIMM 56 = GPIO0_3 (OSPI0_D0)  <-- This overlay
+ *   - SODIMM 58 = GPIO0_4 (OSPI0_D1)
+ *   - SODIMM 60 = GPIO0_5 (OSPI0_D2)
+ *   - SODIMM 62 = GPIO0_6 (OSPI0_D3)
+ *   - SODIMM 66 = GPIO1_18 (OSPI0_DQS)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include "k3-pinctrl.h"
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Disable QSPI (OSPI) interface to free up the pins */
+&ospi0 {
+	status = "disabled";
+};
+
+/* Configure pinmux for SODIMM 56 as GPIO */
+&main_pmx0 {
+	pinctrl_sodimm_56_gpio: main-gpio0-3-sodimm56-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x000c, PIN_INPUT, 7) /* (E25) OSPI0_D0.GPIO0_3 */ /* SODIMM 56 */
+		>;
+	};
+};
+
+/* Add the GPIO pin to main_gpio0 controller */
+&main_gpio0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_sodimm_56_gpio>;
+};

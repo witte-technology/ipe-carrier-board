@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Enable Second Ethernet (RGMII)
+ * 
+ * Ethernet Interfaces:
+ *   - cpsw_port1 = Verdin ETH_1 (on-module PHY, always enabled)
+ *   - cpsw_port2 = Verdin ETH_2 (RGMII, optional on carrier board)
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * Note: The AM62 uses CPSW (Common Platform Switch) for Ethernet.
+ * The second Ethernet port (cpsw_port2) uses RGMII interface and
+ * requires an external PHY on the carrier board.
+ * 
+ * AM62 Ethernet Architecture:
+ *   - cpsw3g: 3-port Gigabit Ethernet Switch
+ *   - cpsw_port1: Internal port (on-module PHY)
+ *   - cpsw_port2: External RGMII port (carrier board PHY)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Enable CPSW Ethernet Switch with both ports */
+&cpsw3g {
+	status = "okay";
+};
+
+/* Verdin ETH_2 - Second Ethernet via RGMII */
+&cpsw_port2 {
+	status = "okay";
+};

@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - TAS2110 Audio Codec
+ * 
+ * Audio Codec: TI TAS2110 (I2C address 0x4c)
+ * Interface: I2S via McASP0 (Verdin I2S_1)
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * Note: This overlay disables the default NAU8822 codec that is configured
+ * in the Verdin Development Board device tree and enables the TAS2110
+ * codec used on the Ipê Carrier Board.
+ * 
+ * AM62 Audio Architecture:
+ *   - McASP0 = Verdin I2S_1 (SODIMM 30, 32, 34, 38)
+ *   - I2C_1 = main_i2c1 (for codec control)
+ *   - audio_refclk1 = MCLK reference
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* 
+ * Disable the default NAU8822 sound card configuration
+ * This is defined in k3-am62-verdin-dev.dtsi for Development Board
+ */
+&{/} {
+	sound_ext: sound-tas2110 {
+		compatible = "simple-audio-card";
+		simple-audio-card,bitclock-master = <&codec_cpu>;
+		simple-audio-card,frame-master = <&codec_cpu>;
+		simple-audio-card,name = "tas2110";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,widgets =
+			"Speaker", "Speaker";
+		simple-audio-card,routing =
+			"DAC", "ASI1 Sel",
+			"OUT", "DAC",
+			"Speaker", "OUT";
+
+		codec_dai: simple-audio-card,codec {
+			sound-dai = <&tas2110>;
+			clocks = <&audio_refclk1>;
+		};
+
+		codec_cpu: simple-audio-card,cpu {
+			sound-dai = <&mcasp0>;
+		};
+	};
+};
+
+/*
+ * Disable NAU8822 codec if present in base device tree
+ * The NAU8822 is on the Verdin Development Board, not on Ipê Board
+ */
+&nau8822_1a {
+	status = "disabled";
+};
+
+/* Verdin I2S_1 - McASP0 */
+&mcasp0 {
+	#sound-dai-cells = <0>;
+	status = "okay";
+};
+
+/* Verdin I2C_1 - Audio Codec I2C bus */
+&main_i2c1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* TI TAS2110 Audio Codec */
+	tas2110: audio-codec@4c {
+		compatible = "ti,tas2110";
+		reg = <0x4c>;
+		#sound-dai-cells = <0>;
+		status = "okay";
+	};
+};

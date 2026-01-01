@@ -1,0 +1,66 @@
+# tcbuild.yaml sample for Witte IPE Carrier Board
+# Module: Verdin AM62
+# Carrier Board: Ipê Carrier Board
+# Kernel 6.6 (TorizonOS 7.4)
+#
+# Witte Technology LTDA - https://wittetech.com/
+
+input:
+  easy-installer:
+    # Verdin AM62 (WiFi variant)
+    local: torizon-docker-verdin-am62-Tezi_7.4.0+build.28.tar
+    # Verdin AM62 (Non-WiFi variant)
+    #local: torizon-docker-verdin-am62-Tezi_7.4.0+build.28.tar
+
+customization:
+  # Splash screen (optional - 1024x600 PNG recommended)
+  splash-screen: custom-splash-screen.png
+  
+  device-tree:
+    # Include directories for device tree compilation
+    include-dirs:
+      - linux/include/
+      # TI AM62 specific includes
+      - linux/arch/arm64/boot/dts/ti/
+    
+    # Base device tree for AM62
+    # WiFi variant:
+    custom: linux/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
+    # Non-WiFi variant:
+    #custom: linux/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts
+    
+    # Device-tree overlays configuration
+    overlays:
+      # Clear all overlays from base image
+      clear: true
+      
+      # Overlays to remove from base image (if clear is false)
+      #remove:
+      #  - verdin-am62_nau8822-btl_overlay.dtbo
+      
+      # Overlays to add
+      add:
+        # Enable CAN interfaces (CAN FD supported)
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
+        
+        # Enable second Ethernet (RGMII)
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
+        
+        # MIPI-DSI Display 7"/10.1" with Goodix GT911 touch
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts
+
+        # MLVDS Display 10.1" with Goodix GT928 touch
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_lvds_display_10inch_overlay.dts
+        
+        # TAS2110 Audio Codec (uncomment if using audio)
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_audio-codec.dts
+        
+        # Enable SODIMM 56 as GPIO (uncomment if needed, disables QSPI)
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-sodimm-56-as-gpio.dts
+
+output:
+  easy-installer:
+    local: output_image_easy_installer
+    # Optional: Customize Easy Installer metadata
+    #name: "IPE Board - TorizonOS 7.4"
+    #description: "Custom TorizonOS image for IPE Carrier Board with Verdin AM62"

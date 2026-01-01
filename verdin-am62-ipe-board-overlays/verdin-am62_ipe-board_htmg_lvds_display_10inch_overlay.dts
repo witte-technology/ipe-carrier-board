@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Native LVDS Display (OLDI)
+ * Display Model: AT-T101QIH-45CP 10.1" 1280x800 LVDS
+ *
+ * Touchscreen capacitive: Goodix GT928
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * AM62 LVDS Architecture:
+ *   - Uses OLDI (Open LVDS Display Interface)
+ *   - Single-link LVDS via OLDI0
+ *   - DSS (Display SubSystem) with tidss driver
+ *   - VP1 port for OLDI output
+ * 
+ * Pin Mapping:
+ *   - OLDI0_A0-A3: LVDS data lanes
+ *   - OLDI0_CLK0: LVDS clock
+ *   - SODIMM 15 (PWM_1): Backlight PWM
+ *   - SODIMM 46 (GPIO): Touch interrupt
+ *   - SODIMM 44 (GPIO): Touch reset
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pwm/pwm.h>
+#include "k3-pinctrl.h"
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Panel LVDS and backlight definition */
+&{/} {
+	panel_lvds: panel-lvds {
+		compatible = "panel-lvds";
+		backlight = <&backlight_lvds>;
+		data-mapping = "vesa-24";
+		height-mm = <136>;
+		width-mm = <217>;
+		status = "okay";
+
+		panel-timing {
+			clock-frequency = <71100000>;
+			de-active = <1>;
+			hactive = <1280>;
+			hback-porch = <60>;
+			hfront-porch = <60>;
+			hsync-active = <0>;
+			hsync-len = <40>;
+			pixelclk-active = <1>;
+			vactive = <800>;
+			vback-porch = <7>;
+			vfront-porch = <7>;
+			vsync-active = <0>;
+			vsync-len = <9>;
+		};
+
+		port {
+			panel_lvds_in: endpoint {
+				remote-endpoint = <&oldi_out0>;
+			};
+		};
+	};
+
+	backlight_lvds: backlight-lvds {
+		compatible = "pwm-backlight";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_lvds_bkl_en>;
+		brightness-levels = <0 4 8 14 22 32 45 60 78 100 125 153 185 220 255>;
+		default-brightness-level = <10>;
+		/* Verdin PWM_1 (SODIMM 15) */
+		pwms = <&epwm0 0 6666667 PWM_POLARITY_INVERTED>;
+		/* Backlight enable GPIO - adjust per carrier board design */
+		/* enable-gpios = <&main_gpio0 XX GPIO_ACTIVE_HIGH>; */
+		status = "okay";
+	};
+};
+
+/* OLDI pinmux configuration */
+&main_pmx0 {
+	pinctrl_oldi0: main-oldi0-pins-default {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x0260, PIN_OUTPUT, 0) /* (AA5) OLDI0_A0N */
+			AM62X_IOPAD(0x025c, PIN_OUTPUT, 0) /* (Y6) OLDI0_A0P */
+			AM62X_IOPAD(0x0268, PIN_OUTPUT, 0) /* (AD3) OLDI0_A1N */
+			AM62X_IOPAD(0x0264, PIN_OUTPUT, 0) /* (AB4) OLDI0_A1P */
+			AM62X_IOPAD(0x0270, PIN_OUTPUT, 0) /* (Y8) OLDI0_A2N */
+			AM62X_IOPAD(0x026c, PIN_OUTPUT, 0) /* (AA8) OLDI0_A2P */
+			AM62X_IOPAD(0x0278, PIN_OUTPUT, 0) /* (AB6) OLDI0_A3N */
+			AM62X_IOPAD(0x0274, PIN_OUTPUT, 0) /* (AA7) OLDI0_A3P */
+			AM62X_IOPAD(0x0280, PIN_OUTPUT, 0) /* (AC6) OLDI0_CLK0N */
+			AM62X_IOPAD(0x027c, PIN_OUTPUT, 0) /* (AC5) OLDI0_CLK0P */
+		>;
+	};
+
+	pinctrl_lvds_bkl_en: lvds-bkl-en-pins-default {
+		pinctrl-single,pins = <
+			/* Backlight enable - adjust GPIO as needed */
+		>;
+	};
+
+	pinctrl_gt928_touch: gt928-touch-pins-default {
+		pinctrl-single,pins = <
+			/* Touch interrupt and reset GPIOs - adjust per carrier board */
+			/* Example: SODIMM 46 for interrupt, SODIMM 44 for reset */
+		>;
+	};
+};
+
+/* DSS - Display SubSystem */
+&dss {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_oldi0>;
+	status = "okay";
+};
+
+/* DSS ports configuration */
+&dss_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	/* VP1: OLDI output */
+	port@0 {
+		reg = <0>;
+
+		oldi_out0: endpoint {
+			remote-endpoint = <&panel_lvds_in>;
+		};
+	};
+};
+
+/* Verdin PWM_1 for backlight */
+&epwm0 {
+	status = "okay";
+};
+
+/* Verdin I2C_2_DSI for touchscreen */
+&main_i2c2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* Goodix GT928 touchscreen at 0x14 address */
+	touch@14 {
+		compatible = "goodix,gt928";
+		reg = <0x14>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gt928_touch>;
+		/* Adjust interrupt and reset GPIOs per carrier board design */
+		/* interrupt-parent = <&main_gpio0>; */
+		/* interrupts = <XX IRQ_TYPE_EDGE_FALLING>; */
+		/* reset-gpios = <&main_gpio0 YY GPIO_ACTIVE_LOW>; */
+		status = "disabled";
+	};
+
+	/* Goodix GT928 touchscreen at 0x5D address */
+	touch@5d {
+		compatible = "goodix,gt928";
+		reg = <0x5d>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gt928_touch>;
+		/* Adjust interrupt and reset GPIOs per carrier board design */
+		/* interrupt-parent = <&main_gpio0>; */
+		/* interrupts = <XX IRQ_TYPE_EDGE_FALLING>; */
+		/* reset-gpios = <&main_gpio0 YY GPIO_ACTIVE_LOW>; */
+		status = "okay";
+	};
+};

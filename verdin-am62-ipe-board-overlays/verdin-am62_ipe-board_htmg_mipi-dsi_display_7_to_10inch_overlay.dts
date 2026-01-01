@@ -1,0 +1,163 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - MIPI-DSI Displays from HTMG
+ * Display Models GBExxxWSH02CE: 
+ * 	- TDO GBE070WSH02CE 7" 1024x600 MIPI-DSI
+ *	- TDO GBE101WSH02CE 10.1" 1024x600 MIPI-DSI
+ *
+ * Touchscreen capacitive: Goodix GT911
+ * 
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.4)
+ * 
+ * Note: Verdin AM62 uses DPI -> TC9594XBG (on-module) -> DSI -> SN65DSI84 -> LVDS
+ * The TC9594XBG bridge converts DPI to DSI on the module.
+ * This overlay configures the SN65DSI84 bridge on the carrier board (DSI to LVDS).
+ * 
+ * GPIO Mapping for AM62:
+ *   - SODIMM 21 (GPIO_10_DSI / Bridge Enable) = main_gpio0 30
+ *   - SODIMM 17 (DSI_1_INT# / Touch INT) = main_gpio1 49
+ *   - SODIMM 19 (PWM_3_DSI / Backlight) = epwm1
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Panel LVDS definition */
+&{/} {
+	panel_lvds: panel-lvds {
+		compatible = "panel-lvds";
+		backlight = <&backlight_dsi>;
+		data-mapping = "vesa-24";
+		height-mm = <85>;
+		width-mm = <154>;
+		status = "okay";
+
+		panel-timing {
+			clock-frequency = <47250000>;
+			de-active = <1>;
+			hactive = <1024>;
+			hback-porch = <64>;
+			hfront-porch = <72>;
+			hsync-active = <0>;
+			hsync-len = <32>;
+			pixelclk-active = <1>;
+			vactive = <600>;
+			vback-porch = <15>;
+			vfront-porch = <15>;
+			vsync-active = <0>;
+			vsync-len = <8>;
+		};
+
+		port {
+			panel_in_lvds: endpoint {
+				remote-endpoint = <&lvds_out_panel>;
+			};
+		};
+	};
+
+	backlight_dsi: backlight-dsi {
+		compatible = "pwm-backlight";
+		brightness-levels = <0 4 8 14 22 32 45 60 78 100 125 153 185 220 255>;
+		default-brightness-level = <10>;
+		/* Verdin PWM_3_DSI (SODIMM 19) */
+		pwms = <&epwm1 0 6666667 0>;
+		status = "okay";
+	};
+};
+
+/* Verdin PWM_3_DSI */
+&epwm1 {
+	status = "okay";
+};
+
+/* Verdin I2C_2_DSI */
+&main_i2c2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	/* 
+	 * TI SN65DSI84 MIPI-DSI to dual-link LVDS bridge
+	 * Note: Using sn65dsi83 compatible as it's similar driver
+	 */
+	bridge@2c {
+		compatible = "ti,sn65dsi83";
+		reg = <0x2c>;
+		/* Verdin GPIO_10_DSI (SODIMM 21) - Enable */
+		enable-gpios = <&main_gpio0 30 GPIO_ACTIVE_HIGH>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				dsi_bridge_in: endpoint {
+					data-lanes = <1 2 3 4>;
+					remote-endpoint = <&dsi_out>;
+				};
+			};
+
+			port@2 {
+				reg = <2>;
+				lvds_out_panel: endpoint {
+					remote-endpoint = <&panel_in_lvds>;
+				};
+			};
+		};
+	};
+
+	/* Goodix GT911 touchscreen at 0x14 address */
+	goodix_ts_14: gt911@14 {
+		compatible = "goodix,gt911";
+		reg = <0x14>;
+		/* Verdin DSI_1_INT# (SODIMM 17) */
+		interrupt-parent = <&main_gpio1>;
+		interrupts = <49 IRQ_TYPE_EDGE_FALLING>;
+		status = "disabled";
+	};
+
+	/* Goodix GT911 touchscreen at 0x5D address */
+	goodix_ts_5d: gt911@5d {
+		compatible = "goodix,gt911";
+		reg = <0x5d>;
+		/* Verdin DSI_1_INT# (SODIMM 17) */
+		interrupt-parent = <&main_gpio1>;
+		interrupts = <49 IRQ_TYPE_EDGE_FALLING>;
+		status = "okay";
+	};
+};
+
+/* 
+ * DSS (Display SubSystem) configuration
+ * The AM62 uses tidss driver for display output
+ */
+&dss {
+	status = "okay";
+};
+
+/* 
+ * DSI output port configuration
+ * Connects to TC9594XBG bridge on module, then to SN65DSI84 on carrier
+ */
+&dss_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	port@1 {
+		reg = <1>;
+		dsi_out: endpoint {
+			remote-endpoint = <&dsi_bridge_in>;
+		};
+	};
+};
