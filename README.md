@@ -108,7 +108,7 @@ https://developer.toradex.com/software/toradex-embedded-software/toradex-downloa
 
 ### 5. Configure tcbuild.yaml
 
-Copy the sample `tcbuild.yaml` file from this repository to the `witte` folder and adjust it according to your target module.
+Copy the sample `tcbuild_imx8mm.yaml` or `tcbuild_imx8mp.yaml` file from this repository to the witte folder and adjust it according to your target module. Also rename the file to `tcbuild.yaml` to be recognize as default by build command.
 
 ### 6. Splash screen (optional)
 
