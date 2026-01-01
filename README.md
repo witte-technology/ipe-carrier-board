@@ -1,6 +1,6 @@
-# Ipê Carrier Board - Device Tree Overlays
+# IPE Carrier Board - Device Tree Overlays
 
-Device Tree Overlays for the **Ipê Carrier Board** by Witte Technology, compatible with Toradex Verdin modules.
+Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatible with Toradex Verdin modules.
 
 ## Compatibility
 
