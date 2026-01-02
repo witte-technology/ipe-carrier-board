@@ -98,7 +98,7 @@
 		interrupt-parent = <&gpio5>; /* Verdin GPIO5_IO01 (SODIMM 46) */
 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
 		reset-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>; /* Verdin GPIO4_IO31 (SODIMM 44) */
-		status = "okay";
+		status = "disabled";
 	};
 };
 

@@ -79,9 +79,9 @@
 	};
 
     /* Goodix GT911 controller touchscreen */
-    goodix_ts_5d: gt911@5d {
+    goodix_ts_14: gt911@14 {
         compatible = "goodix,gt911";
-        reg = <0x5d>;
+        reg = <0x14>;
 		/* Verdin DSI_1_INT# (TOUCH_INT#, SODIMM 17) */
 		interrupt-parent = <&gpio4>;
 		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
@@ -90,10 +90,10 @@
 		status = "okay";
     };
 
-   /* Goodix GT911 controller touchscreen */
-    goodix_ts_14: gt911@14 {
+	/* Goodix GT911 controller touchscreen */
+    goodix_ts_5d: gt911@5d {
         compatible = "goodix,gt911";
-        reg = <0x14>;
+        reg = <0x5d>;
 		/* Verdin DSI_1_INT# (TOUCH_INT#, SODIMM 17) */
 		interrupt-parent = <&gpio4>;
 		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
