@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin iMX8MM overlay to enable SODIMM 56 as GPIO on Ipê Board.
+ * 
+ * Pin Mapping:
+ *   - SODIMM 56 = QSPI_1_IO0 = NAND_DATA00 = GPIO3_IO06
+ * 
+ * Note: This overlay disables the QSPI interface (flexspi) to allow
+ * SODIMM 56 to be used as a general purpose GPIO.
+ *
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.x)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "toradex,verdin-imx8mm";
+};
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/../../arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>
+
+/* Verdin QSPI_1 - disable to use SODIMM 56 as GPIO */
+&flexspi {
+	status = "disabled";
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_gpio1>, <&pinctrl_gpio2>,
+		    <&pinctrl_gpio3>, <&pinctrl_gpio4>,
+		    <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>,
+		    <&pinctrl_sodimm_56>;
+
+	pinctrl_sodimm_56: sodimm56grp {
+		fsl,pins = 
+			<MX8MM_IOMUXC_NAND_DATA00_GPIO3_IO6		0x184>; /* SODIMM 56 */
+	};
+};

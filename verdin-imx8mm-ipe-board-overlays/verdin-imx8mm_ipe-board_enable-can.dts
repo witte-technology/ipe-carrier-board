@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin iMX8MM overlay to enable CAN on Ipê Board.
+ * 
+ * CAN Interfaces:
+ *   - flexcan1 = Verdin CAN_1 (active in base DT)
+ *   - flexcan2 = Verdin CAN_2 (directly accessible on carrier)
+ * 
+ * RS (Slope Control) Pin Mapping:
+ *   - CAN1_RS = SODIMM 36 (GPIO4_IO02, directly controlled on board)
+ *   - CAN2_RS = SODIMM 42 (GPIO5_IO00, directly controlled on board)
+ * 
+ * Note: It's necessary to apply this overlay above the 
+ * imx8mm-verdin-wifi-dev.dtb or imx8mm-verdin-nonwifi-dev.dtb 
+ * because of the "nau8822_1a" device that uses conflicting pins.
+ *
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.x)
+ * 
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "toradex,verdin-imx8mm";
+};
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/../../arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>
+
+/* Disable NAU8822 audio codec - pins conflict with CAN RS control */
+&nau8822_1a {
+	status = "disabled";
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_gpio1>, <&pinctrl_gpio2>,
+		    <&pinctrl_gpio3>, <&pinctrl_gpio4>,
+		    <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>,
+		    <&pinctrl_can1_rs>, <&pinctrl_can2_rs>;
+
+	pinctrl_can1_rs: can1rsgrp {
+		fsl,pins = 
+			<MX8MM_IOMUXC_SAI1_RXD0_GPIO4_IO2		0x184>; /* SODIMM 36 */
+	};
+
+	pinctrl_can2_rs: can2rsgrp {
+		fsl,pins =
+			<MX8MM_IOMUXC_SAI3_TXC_GPIO5_IO0		0x184>; /* SODIMM 42 */
+	};
+};
