@@ -66,14 +66,16 @@ customization:
       clear: true
       # >> Specific overlays not to use from base image (useful only when
       # >> clear is false and not DT has been selected).
-      #remove:
+      remove:
         # - apalis-imx8_hdmi_overlay.dtbo
         # AM62
         # AM62P        
         # IMX8MM Mini
-        #- verdin-imx8mm_nau8822-btl_overlay.dtbo
+        - verdin-imx8mm_nau8822-btl_overlay.dtbo
+        - verdin-imx8mm_spidev_overlay.dtbo
+        - verdin-imx8mm_dsi-to-hdmi_overlay.dtbo
         # IMX8MP Plus
-        #-- verdin-imx8mp_nau8822-btl_overlay.dtbo
+        #- verdin-imx8mp_nau8822-btl_overlay.dtbo
       # >> Overlays to add to output image.
       add:
         # IMX8MM Mini
