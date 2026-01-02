@@ -66,7 +66,7 @@ customization:
       clear: true
       # >> Specific overlays not to use from base image (useful only when
       # >> clear is false and not DT has been selected).
-      #remove:
+      remove:
         # IMX8MP Plus
         - verdin-imx8mp_nau8822-btl_overlay.dtbo
       # >> Overlays to add to output image.
