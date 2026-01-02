@@ -74,6 +74,7 @@ customization:
       # >> Overlays to add to output image.
       add:
         # IMX8MM Mini
+        - device-trees/ipe-carrier-board/verdin-imx8mm-ipe-board-overlays/verdin-imx8mm_ipe-board_disable-dev-board-devices.dts
         - device-trees/ipe-carrier-board/verdin-imx8mm-ipe-board-overlays/verdin-imx8mm_ipe-board_enable-can.dts
         - device-trees/ipe-carrier-board/verdin-imx8mm-ipe-board-overlays/verdin-imx8mm_ipe-board_enable-sodimm-56-as-gpio.dts
         - device-trees/ipe-carrier-board/verdin-imx8mm-ipe-board-overlays/verdin-imx8mm_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts     

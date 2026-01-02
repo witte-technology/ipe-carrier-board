@@ -87,7 +87,7 @@
 		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_gpio_9_dsi>;
-		status = "okay";
+		status = "disabled";
     };
 
 	/* Goodix GT911 controller touchscreen */

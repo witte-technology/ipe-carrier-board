@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: MIT
+/*
+ * Verdin iMX8MP overlay - Disable Toradex Dev Board devices not present on Ipê Board
+ *
+ * The base device tree (imx8mp-verdin-wifi-dev.dts) includes imx8mp-verdin-dev.dtsi
+ * which enables devices specific to Toradex Development Board.
+ * This overlay disables those devices for use with Ipê Carrier Board.
+ *
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 5.15 (TorizonOS 6.x)
+ *
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "toradex,verdin-imx8mp";
+};
+
+/* Disable PCA9535 GPIO expander - not present on Ipê Board */
+&gpio_expander_21 {
+	status = "disabled";
+};
+
+/* Disable INA219 current sensor - not present on Ipê Board */
+&hwmon {
+	status = "disabled";
+};
+
+/* Disable temperature sensor that depends on INA219 */
+&hwmon_temp {
+	status = "disabled";
+};
+
+/* Disable ETH2 PHY regulator - depends on gpio_expander_21 */
+&reg_eth2phy {
+	status = "disabled";
+};
