@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+/*
+ * Verdin AM62 overlay - Disable Toradex Dev Board devices not present on Ipê Board
+ *
+ * The base device tree (k3-am625-verdin-wifi-dev.dts) includes k3-am62-verdin-dev.dtsi
+ * which enables devices specific to Toradex Development Board.
+ * This overlay disables those devices for use with Ipê Carrier Board.
+ *
+ * Disabled devices:
+ *   - gpio_expander_21: PCA6416 GPIO expander (not on IPE)
+ *   - nau8822_1a: NAU8822 audio codec (IPE uses TAS2110)
+ *   - INA219 current sensor (not on IPE)
+ *   - TMP75C temperature sensor (not on IPE)
+ *   - EEPROM at 0x57 (not on IPE)
+ *
+ * Carrier Board: Ipê Carrier Board
+ * Kernel 6.6 (TorizonOS 7.x)
+ *
+ * Witte Technology LTDA - https://wittetech.com/
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "toradex,verdin-am62";
+};
+
+/* Disable PCA6416 GPIO expander - not present on Ipê Board */
+&gpio_expander_21 {
+	status = "disabled";
+};
+
+/* Disable NAU8822 audio codec - IPE uses TAS2110 instead */
+&nau8822_1a {
+	status = "disabled";
+};
+
+/* 
+ * Disable INA219 current sensor at 0x40 on main_i2c1
+ * This device exists on Dev Board but not on IPE
+ */
+&main_i2c1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	hwmon@40 {
+		compatible = "ti,ina219";
+		reg = <0x40>;
+		status = "disabled";
+	};
+
+	/* TMP75C temperature sensor - not on IPE */
+	sensor@4f {
+		compatible = "ti,tmp75c";
+		reg = <0x4f>;
+		status = "disabled";
+	};
+
+	/* EEPROM - not on IPE */
+	eeprom@57 {
+		compatible = "st,24c02", "atmel,24c02";
+		reg = <0x57>;
+		status = "disabled";
+	};
+};

@@ -35,29 +35,28 @@ customization:
       clear: true
       
       # Overlays to remove from base image (if clear is false)
-      #remove:
-      #  - verdin-am62_nau8822-btl_overlay.dtbo
+      remove:
+        - verdin-am62_nau8822-btl_overlay.dtbo
       
       # Overlays to add
       add:
-        # Enable CAN interfaces (CAN FD supported)
-        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
+        # Disable Toradex Dev Board devices not present on IPE
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_disable-dev-board-devices.dts
         
         # Enable second Ethernet (RGMII)
-        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
-        
-        # MIPI-DSI Display 7"/10.1" with Goodix GT911 touch
-        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
 
-        # MLVDS Display 10.1" with Goodix GT928 touch
-        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_lvds_display_10inch_overlay.dts
-        
-        # TAS2110 Audio Codec (uncomment if using audio)
-        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_audio-codec.dts
+        # Enable CAN interfaces (CAN FD supported)
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
         
         # Enable SODIMM 56 as GPIO (uncomment if needed, disables QSPI)
-        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-sodimm-56-as-gpio.dts
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-sodimm-56-as-gpio.dts
+        
+        # MLVDS Display 10.1" with Goodix GT928 touch
+        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_lvds_display_10inch_overlay.dts
 
+        # MIPI-DSI Display 7"/10.1" with Goodix GT911 touch
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_mipi-dsi_display_7_to_10inch_overlay.dts                
 output:
   easy-installer:
     local: output_image_easy_installer
