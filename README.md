@@ -6,14 +6,12 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 
 | Branch | TorizonOS | Kernel |
 |--------|-----------|--------|
-| `torizon-6.x_kernel-5.15` | 6.8.x | 5.15.x |
+| `toradex_5.15-2.2.x-imx` | 6.8.x | 5.15.x |
 
 ## Supported Modules
 
 - ✅ Verdin iMX8M Plus
 - ✅ Verdin iMX8M Mini
-- 🔜 Verdin AM62 *(coming soon)*
-- 🔜 Verdin AM62P *(coming soon)*
 
 ## Available Overlays
 
@@ -27,6 +25,7 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 | `verdin-imx8mp_ipe-board_enable-2ndfec.dts` | Second Ethernet interface (FEC) |
 | `verdin-imx8mp_ipe-board_enable-can.dts` | CAN interfaces with RS pin control |
 | `verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts` | SODIMM 56 configured as GPIO (disables QSPI) |
+| `verdin-imx8mp_ipe-board_disable-dev-board-devices.dts` | Disable all overlay not present in IPE carrier board |
 
 ### Verdin iMX8M Mini
 
@@ -36,6 +35,7 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 | `verdin-imx8mm_ipe-board_audio-codec.dts` | TAS2110 Audio Codec via I2S/SAI1 |
 | `verdin-imx8mm_ipe-board_enable-can.dts` | CAN interfaces with RS pin control ¹ |
 | `verdin-imx8mm_ipe-board_enable-sodimm-56-as-gpio.dts` | SODIMM 56 configured as GPIO (disables QSPI) |
+| `verdin-imx8mm_ipe-board_disable-dev-board-devices.dts` | Disable all overlay not present in IPE carrier board |
 
 > ¹ **Note:** The Verdin iMX8M Mini Quad 2GB Wi-Fi / Bluetooth IT (No CAN) **PN: 0068** does NOT have CAN support.
 
@@ -47,8 +47,10 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 | Native LVDS Display | ✅ | ❌ |
 | TAS2110 Audio Codec | ✅ | ✅ |
 | Second Ethernet (FEC) | ✅ | ❌ |
-| CAN Interfaces | ✅ | ✅ ¹ |
+| CAN Interfaces | ✅ | ✅  |
 | SODIMM 56 as GPIO | ✅ | ✅ |
+
+> **Note:** iMX8M Mini do not support some peripherals like Plus model
 
 ## Repository Structure
 
@@ -58,6 +60,7 @@ device-trees/
     ├── verdin-imx8mp-ipe-board-overlays/
     │   ├── display-tdo-ts070wsh02ce_overlay.dtsi
     │   ├── verdin-imx8mp_ipe-board_audio-codec.dts
+    │   ├── verdin-imx8mp_ipe-board_disable-dev-board-devices.dts
     │   ├── verdin-imx8mp_ipe-board_enable-2ndfec.dts
     │   ├── verdin-imx8mp_ipe-board_enable-can.dts
     │   ├── verdin-imx8mp_ipe-board_enable-sodimm-56-as-gpio.dts
@@ -65,6 +68,7 @@ device-trees/
     │   └── verdin-imx8mp_ipe-board_panel-cap-touch-10inch-lvds_overlay.dts
     └── verdin-imx8mm-ipe-board-overlays/
         ├── verdin-imx8mm_ipe-board_audio-codec.dts
+        ├── verdin-imx8mm_ipe-board_disable-dev-board-devices.dts
         ├── verdin-imx8mm_ipe-board_enable-can.dts
         ├── verdin-imx8mm_ipe-board_enable-sodimm-56-as-gpio.dts
         └── verdin-imx8mm_ipe-board_panel-cap-touch-7-10inch-dsi_overlay.dts
@@ -87,7 +91,7 @@ mkdir witte && cd witte
 Inside the `witte` directory:
 
 ```bash
-git clone -b torizon-6.x_kernel-5.15 https://github.com/user/repo.git device-trees
+git clone -b toradex_5.15-2.2.x-imx git@github.com:witte-technology/ipe-carrier-board.git device-trees
 ```
 
 ### 3. Clone Toradex Linux kernel
@@ -144,8 +148,18 @@ Add a 1024x600 PNG image named `custom-splash-screen.png`. If you don't want a c
 
 ### 8. Run build
 
+If you rename the yaml to default patner:
 ```bash
 torizoncore-builder build
+```
+
+You can specify the file name like below:
+```bash
+torizoncore-builder build --file tcbuild_imx8mm.yaml
+```
+Another option is specify the location:
+```bash
+torizoncore-builder build --file device-trees/ipe-carrier-board/tcbuild_imx8mp.yaml
 ```
 
 ## License
