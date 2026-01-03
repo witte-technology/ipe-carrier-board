@@ -20,8 +20,10 @@ This repository uses **separate branches** for each TorizonOS version. The `mast
 |--------|--------|-----------|--------|--------|
 | [`toradex_6.6-2.2.x-imx`](../../tree/toradex_6.6-2.2.x-imx) | IMX8MM | 7.x (Scarthgap) | 6.6.x | ✅ Active |
 | [`toradex_6.6-2.2.x-imx`](../../tree/toradex_6.6-2.2.x-imx) | IMX8MP | 7.x (Scarthgap) | 6.6.x | ✅ Active |
+| [`toradex_ti-linux-6.6.y`](../../tree/toradex_ti-linux-6.6.y) | AM62 | 7.x (Scarthgap) | 6.6.x | ✅ Active |
 | [`toradex_5.15-2.2.x-imx`](../../tree/toradex_5.15-2.2.x-imx) | IMX8MM | 6.x (Kirkstone) | 5.15.x | ✅ Active |
 | [`toradex_5.15-2.2.x-imx`](../../tree/toradex_5.15-2.2.x-imx) | IMX8MP | 6.x (Kirkstone) | 5.15.x | ✅ Active |
+| [`toradex_ti-linux-6.1.y`](../../tree/toradex_ti-linux-6.1.y) | AM62 | 6.x (Kirkstone) | 6.1.x | ✅ Active |
 
 
 ## Quick Start
@@ -34,7 +36,7 @@ On your Verdin module, run:
 cat /etc/os-release | grep VERSION_ID
 ```
 
-### 2. Clone the correct branch
+### 2. Clone the correct branch for your Verdin module
 
 **For TorizonOS 7.x:**
 
@@ -43,11 +45,21 @@ Verdin IMX8 Mini or Plus:
 git clone -b toradex_6.6-2.2.x-imx git@github.com:witte-technology/ipe-carrier-board.git device-trees
 ```
 
+Verdin AM62:
+```bash
+git clone -b toradex_ti-linux-6.6.y git@github.com:witte-technology/ipe-carrier-board.git device-trees
+```
+
 **For TorizonOS 6.x:**
 
 Verdin IMX8 Mini or Plus:
 ```bash
 git clone -b toradex_5.15-2.2.x-imx git@github.com:witte-technology/ipe-carrier-board.git device-trees
+```
+
+Verdin AM62:
+```bash
+git clone -b toradex_ti-linux-6.1.y git@github.com:witte-technology/ipe-carrier-board.git device-trees
 ```
 
 ### 3. Follow the setup guide
@@ -65,7 +77,7 @@ Each branch contains a complete README with:
 |--------|:-------------:|:-------------:|
 | Verdin iMX8M Plus | ✅ | ✅ |
 | Verdin iMX8M Mini | ✅ | ✅ |
-| Verdin AM62 | 🔜 | 🔜 |
+| Verdin AM62 | ✅ | ✅ |
 | Verdin AM62P | 🔜 | 🔜 |
 
 ## License
