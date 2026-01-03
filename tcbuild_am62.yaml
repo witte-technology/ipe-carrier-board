@@ -44,13 +44,13 @@ customization:
         - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_disable-dev-board-devices.dts
         
         # Enable second Ethernet (RGMII)
-        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-2nd-ethernet.dts
 
         # Enable CAN interfaces (CAN FD supported)
-        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-can.dts
         
         # Enable SODIMM 56 as GPIO (uncomment if needed, disables QSPI)
-        #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-sodimm-56-as-gpio.dts
+        - device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_enable-sodimm-56-as-gpio.dts
         
         # MLVDS Display 10.1" with Goodix GT928 touch
         #- device-trees/ipe-carrier-board/verdin-am62-ipe-board-overlays/verdin-am62_ipe-board_htmg_lvds_display_10inch_overlay.dts
