@@ -47,7 +47,7 @@ git clone -b toradex_6.6-2.2.x-imx git@github.com:witte-technology/ipe-carrier-b
 
 Verdin IMX8 Mini or Plus:
 ```bash
-git clone -b toradex_5.15-2.2.x-imx https://github.com/user/repo.git device-trees
+git clone -b toradex_5.15-2.2.x-imx git@github.com:witte-technology/ipe-carrier-board.git device-trees
 ```
 
 ### 3. Follow the setup guide
