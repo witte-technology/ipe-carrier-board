@@ -14,12 +14,15 @@ Device Tree Overlays for the **IPE Carrier Board** by Witte Technology, compatib
 
 This repository uses **separate branches** for each TorizonOS version. The `master` branch contains only this documentation.
 
-### Available Branches
+### Available Branches for Verdin SoM
 
-| Branch | TorizonOS | Kernel | Status |
-|--------|-----------|--------|--------|
-| [`torizon-7.x_kernel-6.6`](../../tree/torizon-7.x_kernel-6.6) | 7.x (Scarthgap) | 6.6.x | ✅ Active |
-| [`torizon-6.x_kernel-5.15`](../../tree/torizon-6.x_kernel-5.15) | 6.x (Kirkstone) | 5.15.x | ✅ Active |
+| Branch | Module | TorizonOS | Kernel | Status |
+|--------|--------|-----------|--------|--------|
+| [`toradex_6.6-2.2.x-imx`](../../tree/toradex_6.6-2.2.x-imx) | IMX8MM | 7.x (Scarthgap) | 6.6.x | ✅ Active |
+| [`toradex_6.6-2.2.x-imx`](../../tree/toradex_6.6-2.2.x-imx) | IMX8MP | 7.x (Scarthgap) | 6.6.x | ✅ Active |
+| [`toradex_5.15-2.2.x-imx`](../../tree/toradex_5.15-2.2.x-imx) | IMX8MM | 6.x (Kirkstone) | 5.15.x | ✅ Active |
+| [`toradex_5.15-2.2.x-imx`](../../tree/toradex_5.15-2.2.x-imx) | IMX8MP | 6.x (Kirkstone) | 5.15.x | ✅ Active |
+
 
 ## Quick Start
 
@@ -35,14 +38,16 @@ cat /etc/os-release | grep VERSION_ID
 
 **For TorizonOS 7.x:**
 
+Verdin IMX8 Mini or Plus:
 ```bash
-git clone -b torizon-7.x_kernel-6.6 https://github.com/user/repo.git device-trees
+git clone -b toradex_6.6-2.2.x-imx git@github.com:witte-technology/ipe-carrier-board.git device-trees
 ```
 
 **For TorizonOS 6.x:**
 
+Verdin IMX8 Mini or Plus:
 ```bash
-git clone -b torizon-6.x_kernel-5.15 https://github.com/user/repo.git device-trees
+git clone -b toradex_5.15-2.2.x-imx https://github.com/user/repo.git device-trees
 ```
 
 ### 3. Follow the setup guide
@@ -59,19 +64,9 @@ Each branch contains a complete README with:
 | Module | TorizonOS 7.x | TorizonOS 6.x |
 |--------|:-------------:|:-------------:|
 | Verdin iMX8M Plus | ✅ | ✅ |
-| Verdin iMX8M Mini | ✅ | 🔜 |
+| Verdin iMX8M Mini | ✅ | ✅ |
 | Verdin AM62 | 🔜 | 🔜 |
 | Verdin AM62P | 🔜 | 🔜 |
-
-## Why Separate Branches?
-
-Device Tree Overlays are **kernel-specific**. Using an overlay built for kernel 6.6 on a system running kernel 5.15 (or vice-versa) will cause errors or unexpected behavior.
-
-By maintaining separate branches:
-
-- ✅ Each overlay is tested for its specific kernel version
-- ✅ You always get compatible code for your system
-- ✅ Updates to one version don't break another
 
 ## License
 
